@@ -1,0 +1,150 @@
+body {
+  display: block;
+  margin: 0px;
+  font-family: 'Apple Chancery', cursive;
+}
+.landing-page{
+display: flex;
+
+}
+
+.left-side{
+ height: 100vh;
+ width: 300px;
+ background-color: rgb(228, 228, 238);
+ position: fixed;
+}
+
+.right-side{
+  height: 100vh;
+  margin-left: 300px;
+
+}
+.image{
+  width: 36px;
+  height: 36px;
+}
+.left-header{
+  display: flex;
+  text-align: center;
+  padding: 4vh;
+  gap: 10px;
+  
+}
+
+.left-title{
+  padding-top: 1px;
+  margin-top: 0;
+  font-family: 'Apple Chancery',  cursive;
+}
+
+.profile-image {
+  width: 80px;
+  height: 80px;
+  background-color: #3498db;
+  border-radius: 50%;
+  margin-right: -10px;
+  z-index: 0;
+  position: relative; /* Add position relative */
+  margin: auto;
+  margin-bottom:16px;
+
+}
+.profile-pic-image {
+  width: 80px;
+  height: 80px;
+  background-color: #3498db;
+  border-radius: 50%;
+  margin-right: -10px;
+  z-index: 0;
+  position: relative; /* Add position relative */
+  margin: auto;
+}
+
+.profile-image::before,
+.profile-image::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  border: 4px solid  rgb(228, 228, 238);
+}
+
+.profile-image::before {
+  /* border: 48px solid  #e1306c;  */
+  border: 48px solid  #f37e30; /* First border color */
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  z-index: -1;
+}
+.left-names{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.right-container{
+  width: 100%;
+}
+.posts-container{
+  
+  gap:16px;
+  
+}
+
+
+.logout-button{
+  font-weight: 700;
+  color: wheat;
+  margin-left: 30%;
+  margin-top: 15px;
+  width:100px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: linear-gradient(45deg, #f3be6f, #f37e30, #ff3300);
+  
+}
+.modal-submit{
+  font-weight: 700;
+  color: wheat;
+  margin-right: 10px;
+  margin-top: 15px;
+  width:100px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: linear-gradient(45deg, #f3be6f, #f37e30, #ff3300);
+  cursor: pointer;
+}
+.modal-close{
+  font-weight: 700;
+  color: wheat;
+  margin-right: 10px;
+  margin-top: 15px;
+  width:100px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: linear-gradient(45deg, #f3be6f, #f37e30, #ff3300);
+  cursor: pointer;
+}
+.logout-button:hover{
+  border: 1px solid transparent;
+  background: linear-gradient(45deg, #f3be6f, #f37e30, #ff3300);
+  cursor: pointer;
+}
+
+.logout-icon{
+  margin-right: 6px;
+  position: relative;
+  top: 1.25px;
+}
+.logout-button:hover .logout-icon {
+  margin-right: 10px; /* Adjust the margin as desired */
+}

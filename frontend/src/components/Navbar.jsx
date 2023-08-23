@@ -1,151 +1,131 @@
-// import React from "react";
-// import { useState, useEffect, useContext } from "react";
-// import Modal from "react-modal";
-// import { FaSearch, FaBell, FaEnvelope, FaTimes } from "react-icons/fa";
-// import "../styles/Navbar.css";
-// import useDebounce from "../customHooks/useDebounce";
-// import UserContext from "../context/UserContext";
-// import UserSearchItem from "./UserSearchItem";
+import React, { useState, useContext } from 'react';
+import UserContext from '../context/UserContext';
+import '../styles/Navbar.css';
+import { useNavigate, Link } from 'react-router-dom';
+import Modal from 'react-modal';
+import ExpandableTree from './ExpandableTree';
 
-// const Navbar = () => {
-//   const [inputValue, setInputValue] = useState("");
-//   const debouncedSearchValue = useDebounce(inputValue, 700);
-//   const { userState, userDispatch } = useContext(UserContext);
-//   const [modalIsOpen, setModalIsOpen] = useState(false);
-//   const [selectedPicture, setSelectedPicture] = useState(null);
+const Navbar = () => {
+  const { state, dispatch } = useContext(UserContext);
+  const navigate = useNavigate();
+  const [isShoppingListModalOpen, setIsShoppingListModalOpen] = useState(false);
+  const [newList, setNewList] = useState('');
+  const [expandedTrees, setExpandedTrees] = useState({}); // Track expanded status for each tree
+  console.log(state)
+  const openShoppingListModal = () => {
+    setIsShoppingListModalOpen(true);
+  };
 
-//   useEffect(() => {
-//     const searchForUser = async () => {
-//       const response = await fetch(
-//         `http://127.0.0.1:8000/api/user/search-users?query=${debouncedSearchValue}`,
-//         {
-//           method: "GET",
-//           headers: {
-//             Accept: "application/json",
-//             Authorization: `Bearer ${localStorage.getItem("token")}`,
-//           },
-//         },
-//       );
+  const closeShoppingListModal = () => {
+    setIsShoppingListModalOpen(false);
+    setNewList('');
+  };
 
-//       const data = await response.json();
+  const handleDeleteList = async(listId) => {
+    const response = await fetch(`http://127.0.0.1:8000/api/user/delete-shopping-lists/${listId}` , {
+      method:"DELETE",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+    const data = await response.json()
+    console.log(data)
+    dispatch({
+      type: 'DELETE_SHOPPING_LIST',
+      payload: listId,
+    });
+  };
 
-//       userDispatch({ type: "SET_USERS_SEARCH_RESULTS", payload: data.users });
-//       return data;
-//     };
-//     searchForUser();
-//   }, [debouncedSearchValue]);
+  const handleAddList =async () => {
+    const response = await fetch(`http://127.0.0.1:8000/api/user/shopping-lists` , {
+      method:"POST",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        list: newList
+      })
+    })
+    const data = await response.json()
+    console.log(data)
+    dispatch({
+      type: 'ADD_SHOPPING_LIST',
+      payload: {id:data.id , created_at: new Date().toISOString(), list: newList },
+    });
+  };
 
+  const handleTreeClick = (treeId) => {
+    setExpandedTrees((prevState) => ({
+      ...prevState,
+      [treeId]: !prevState[treeId],
+    }));
+  };
 
-//   const handleFileChange = (e) => {
-//     const selectedFile = e.target.files[0];
-//     setSelectedPicture(selectedFile);
-//   };
+  return (
+    <div className='nav-bar'>
+      <div className='left-nav'>
+        <h2 className='app-name'>OnlineRecipes</h2>
+      </div>
+      <div className='right-nav'>
+             <h4>
+               <Link to={'/LandingPage'}>Your Recipes</Link>
+             </h4>
+             <div>
+               <h4>
+                 <Link to={'/searchRecipes'}>Search for Recipes</Link>
+               </h4>
+             </div>
+             <div>
+               <h4>
+                 <Link to={'/likes'}>Your likes</Link>
+               </h4>
+             </div>
+             <div>
+               <h4 onClick={openShoppingListModal}>Shopping List</h4>
+          <Modal
+            isOpen={isShoppingListModalOpen}
+            onRequestClose={closeShoppingListModal}
+            className='modal'
+          >
+            <h2>Shopping List</h2>
+            {state.shopping_lists?.map((list) => (
+              <div key={list.created_at}>
+                <ExpandableTree
+                  title={list.created_at}
+                  id={list.id}
+                  expanded={expandedTrees[list.id]}
+                  onClick={() => handleTreeClick(list.id)} 
+                >
+                  {expandedTrees[list.id] && (
+                    <div className='expandable-content'>
+                      {list.list}
+                      <button
+                        className='content-button'
+                        onClick={() => handleDeleteList(list.id)}
+                      >
+                        {console.log(list)}
+                        Delete List
+                      </button>
+                    </div>
+                  )}
+                </ExpandableTree>
+              </div>
+            ))}
+             <input
+               type='text'
+               value={newList}
+               onChange={(e) => setNewList(e.target.value)}
+               placeholder='New List'
+             />
+            <button onClick={handleAddList}>Add List</button>
+             <button onClick={closeShoppingListModal}>Close</button>
+          </Modal>
+        </div>
+        <button className='logout-button'>logout</button>
+      </div>
+    </div>
+  );
+};
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     console.log(selectedPicture)
-//     if (!selectedPicture) {
-//       console.log("No image selected");
-//       return;
-//     }
-
-//     const formData = new FormData();
-//     formData.append("image_url", selectedPicture);
-
-//     try {
-//       const response = await fetch(
-//         "http://127.0.0.1:8000/api/user/create-post",
-//         {
-//           method: "POST",
-//           headers: {
-//             Accept: "application/json",
-//             Authorization: `Bearer ${localStorage.getItem("token")}`,
-//           },
-//           body: formData,
-//         },
-//       );
-//       const data = await response.json();
-//       console.log(data)
-//       if (response.ok) {
-//         setModalIsOpen(false);
-//         console.log(1111111111)
-//         userDispatch({ type: "SET_USER_POSTS", payload: data.data });
-//       } else {
-//         console.log("Error creating post");
-//       }
-//     } catch (error) {
-//       console.error("An error occurred:", error);
-//     }
-//     setSelectedPicture(null)
-//   };
-
-//   const handleClearInput = () => {
-//     setInputValue("");
-//   };
-
-
-//   return (
-//     <>
-//       <div className="navbar">
-//         <div className="navbar-left">
-//           <div className="search-input">
-//             <input
-//               type="text"
-//               placeholder="Search"
-//               value={inputValue}
-//               onChange={(e) => setInputValue(e.target.value)}
-//             />
-//             {inputValue && (
-//               <FaTimes className="clear-icon" onClick={handleClearInput} />
-//             )}
-//             <FaSearch className="search-icon" />
-//           </div>
-//         </div>
-//         <div className="navbar-right">
-//         <FaBell className={`navbar-icon`} />
-//           <FaEnvelope className={`navbar-icon`} />
-//           <button
-//             onClick={() => setModalIsOpen(true)}
-//             className="add-photo-button"
-//           >
-//             + Add Photo
-//           </button>
-//         </div>
-
-//         <Modal
-//           isOpen={modalIsOpen}
-//           onRequestClose={() => setModalIsOpen(false)}
-//           contentLabel="Add Photo Modal"
-//           className="modal"
-//           overlayClassName="modal-overlay"
-//         >
-//           <h2>Add Photo</h2>
-//           <form
-//             onSubmit={handleSubmit}
-//             encType="multipart/form-data"
-//             className="register-form-container"
-//           >
-//             <input
-//               type="file"
-//               name="profilePicture"
-//               onChange={handleFileChange}
-//             />
-//             <button className="modal-submit" type="submit">Submit</button>
-//             <button className="modal-close" onClick={() => setModalIsOpen(false)}>Close</button>
-//           </form>
-//         </Modal>
-//       </div>
-//       <div className="search-container">
-//         {debouncedSearchValue &&
-//           userState.usersSearchResults.map((user) => (
-//             <UserSearchItem
-//               user={user}
-//               debouncedSearchVal={debouncedSearchValue}
-//             />
-//           ))}
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Navbar;
+export default Navbar;

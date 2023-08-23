@@ -1,95 +1,41 @@
-/* Navbar.css */
-.nav-contaienr{
+.nav-bar{
+  width: 100%;
+  height: 50px;
+  border-bottom: 2px solid #3498db;
   display: flex;
-  flex-direction: column;
-  
+  padding-bottom: 20px;
+  padding-top: 0;
+  justify-content: space-between;
+  font-family: 'Apple Chancery',  cursive;
 }
-.navbar {
+.app-name{
+  color: #3498db;
+}
+
+.right-nav{
   display: flex;
-  align-items: center;
-  padding: 0 20px;
-  padding-top:4vh ;
- 
+  margin-right: 40px;
+  gap: 20px;
+  margin-top: 7px;
 }
-
-.navbar-left {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  
+.left-nav{
+  margin-left: 40px;
 }
-
-.search-input {
-  position: relative;
- 
-
-}
-
-.search-input input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  outline: none;
-}
-
-.search-icon {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  color: #aaa;
-}
-.clear-icon {
-  position: absolute;
-  top: 50%;
-  right: 30px;
-  transform: translateY(-50%);
-  color: #aaa;
-  cursor:pointer;
-}
-
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.navbar-icon {
-  font-size: 20px;
-  color: #333;
-}
-
-.add-photo-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  background: linear-gradient(45deg, #ff9900, #ff6600, #ff3300);
-  color: white;
-  font-weight: bold;
+.logout-button{
+  background-color:  #3498db;
+  border:transparent;
+  width: 75px;
+  height: 30px;
+  margin-top: 18px;
+  border-radius: 15px;
   cursor: pointer;
+  font-weight: 600;
 }
-.modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border-radius: 4px;
-  outline: none;
+.logout-button:hover{
+  background-color:  #072c46;
+  color: white;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.navbar-icon {
- color: #f37e30
+.content-button{
+  margin-left: 10px;
 }

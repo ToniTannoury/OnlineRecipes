@@ -1,0 +1,28 @@
+/* ExpandableTree.css */
+.expandable-tree {
+  margin-top: 10px;
+  background-color: #3498db;
+  border-radius: 12px;
+}
+
+.expandable-header {
+  cursor: pointer;
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+  background-color: #DB7734;
+  color: ghostwhite
+}
+
+.expandable-content {
+  padding-left: 8px;
+  min-height: 50px;
+  margin-bottom: 10px;
+ 
+ 
+}
+.expandable-header.hw{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

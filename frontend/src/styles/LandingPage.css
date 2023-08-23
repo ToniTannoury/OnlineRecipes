@@ -148,3 +148,8 @@ display: flex;
 .logout-button:hover .logout-icon {
   margin-right: 10px; /* Adjust the margin as desired */
 }
+
+.select-recipe{
+  width: 500px;
+  display: none;
+}

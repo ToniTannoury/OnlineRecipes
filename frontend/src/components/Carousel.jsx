@@ -1,12 +1,46 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect , useContext } from "react";
+import UserContext from "../context/UserContext";
 import "../styles/Carousel.css";
+import Recipe from "./Recipe";
+import Modal  from "react-modal";
 
-const Carousel = ({ followings }) => {
+const Carousel = ({ recipes }) => {
   const [startX, setStartX] = useState(null);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const carouselRef = useRef(null);
+  const [cuisine1, setCuisine1] = useState('recipe.cuisine');
+  const [image1, setImage1] = useState(null);
+  const [ingredients1, setIngredients1] = useState('recipe.ingredients');
+  const [name1, setName1] = useState('recipe.name');
+  const [recipeCuisine, setRecipeCuisine] = useState('recipe.cuisine');
+  const [recipeIngredients, setRecipeIngredients] = useState('recipe.ingredients');
+  const [recipeName, setRecipeName] = useState('recipe.name');
+  const [selectedId, setSelectedId] = useState(0);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isViewRecipeModalOpen, setIsViewRecipeModalOpen] = useState(false); 
+  const {state , dispatch} = useContext(UserContext)
+  const handleImageChange = (event) => {
+    setImage1(event.target.files[0]);
+  };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append('cuisine', cuisine1);
+    formData.append('image_url', image1);
+    formData.append('ingredients', ingredients1);
+    formData.append('name', name1);
+
+    // onUpdateRecipe( formData);
+console.log(formData)
+    setCuisine1('');
+    setImage1(null);
+    setIngredients1('');
+    setName1('');
+    setIsEditModalOpen(false);
+  };
   const handleDragStart = (e) => {
     e.preventDefault();
     setStartX(e.clientX);
@@ -37,10 +71,138 @@ const Carousel = ({ followings }) => {
       document.removeEventListener("mouseup", handleDragEnd);
     };
   }, []);
+  const handleEditClick = (e , recipe) => {
+    
+    setName1(recipe.name);
+    setCuisine1(recipe.cuisine);
+    setIngredients1(recipe.ingredients);
+    setIsEditModalOpen(true);
+    setSelectedId(+e.target.parentElement.parentElement.getAttribute('_id') )
+  };
+  const handleViewRecipe = (e , recipe) => {
+    setRecipeCuisine(recipe.cuisine)
+    setRecipeIngredients(recipe.ingredients)
+    setRecipeName(recipe.name)
+    setIsViewRecipeModalOpen(true);
+    setSelectedId(+e.target.parentElement.parentElement.getAttribute('_id') )
+  };
+  const onUpdateRecipe = async (formData) => {
+    for (let entry of formData.entries()) {
+      console.log(entry[0], entry[1]);
+    }
+    formData.append('image_url', image1?.name);
+    for (let entry of formData.entries()) {
+      console.log(entry[0], entry[1]);
+    }
+    const response = await fetch(`http://127.0.0.1:8000/api/user/update_post/${selectedId}`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData
+    });
+    const data = await response.json();
+    dispatch({
+      type:"EDIT_POST",
+      payload:{
+        postId:+selectedId,
+        editedData:formData,
+      }
+    })
+    console.log(data);
+    setIsEditModalOpen(false);
+  };
+  
+     const handleEditSubmit = async (event) => {
+      event.preventDefault();
+    
+      const formData = new FormData();
+      formData.append('cuisine', cuisine1);
+      formData.append('image_url', image1);
+      formData.append('ingredients', ingredients1);
+      formData.append('name', name1);
+      console.log(cuisine1)
+    
+      await onUpdateRecipe(formData); 
+    
+      setCuisine1('');
+      setImage1(null);
+      setIngredients1('');
+      setName1('');
+      setIsEditModalOpen(false);
+    };
 
   return (
     <>
-      <h2 className="carousel-heading">Followings</h2>
+           <Modal  isOpen={isEditModalOpen} onRequestClose={() => setIsEditModalOpen(false)} className="modal">
+      <h2 className="modal-title">Edit Recipe</h2>
+      <form className="modal-form" onSubmit={handleSubmit}>
+        <label className="modal-label">Name:</label>
+        <input
+          className="modal-input"
+          type="text"
+          value={name1}
+          onChange={(e) => setName1(e.target.value)}
+        />
+        <label className="modal-label">Cuisine:</label>
+        <input
+          className="modal-input"
+          type="text"
+          value={cuisine1}
+          onChange={(e) => setCuisine1(e.target.value)}
+        />
+        <label className="modal-label">Image:</label>
+        <input
+          className="modal-input"
+          type="file"
+          onChange={handleImageChange}
+        />
+        <label className="modal-label">Ingredients:</label>
+        <textarea
+          className="modal-input"
+          type="text"
+          value={ingredients1}
+          onChange={(e) => setIngredients1(e.target.value)}
+        />
+
+        <button className="modal-button" type="submit" onClick={handleEditSubmit}>
+          Update Recipe
+        </button>
+      </form>
+    </Modal>
+           <Modal  isOpen={isViewRecipeModalOpen} onRequestClose={() => setIsViewRecipeModalOpen(false)} className="recipe_modal">
+      <h2 className="modal-title">Recipe</h2>
+      <form className="modal-form" onSubmit={handleSubmit}>
+        <div>
+        <span className="modal-label">Name: </span>
+        <span>{recipeName}</span>
+        </div>
+        
+        <div>
+        <span className="modal-label">Cuisine: </span>
+        <span>{recipeCuisine}</span>
+        </div>
+        
+        <div>
+        <span className="modal-label">Ingredients:</span>
+        <textarea
+          className="modal-input"
+          type="text"
+          value={ingredients1}
+          disabled
+          style={{border:"none"}}
+        />
+        </div>
+        <div>
+        <span className="modal-label">Images:</span>
+        <div>
+          images...
+        </div>
+        </div>
+        
+      </form>
+    </Modal>
+
       <div
         className="carousel"
         ref={carouselRef}
@@ -50,23 +212,18 @@ const Carousel = ({ followings }) => {
         style={{ display: "flex", overflowX: "scroll" }}
       >
         <div style={{ display: "flex", gap: "40px", textAlign: "center" }}>
-          {followings.map((student) => (
+          {recipes?.map((recipe) => (
             <div
-              key={student.id}
-              className="student-image"
+              key={recipe.id}
+             
               style={{
                 flex: "0 0 auto",
               }}
             >
-              <div className="student-wrapper">
-                <div className="profile-pic-image-carousel">
-                  <img
-                    className="profile-pic-image-car"
-                    src={`http://127.0.0.1:8000/images/${student.pic_url}`}
-                  />
+                <div className="student-wrapper">
+
+                  <Recipe handleViewRecipe={handleViewRecipe} handleEditClick={handleEditClick} recipe={recipe}/>
                 </div>
-                <p className="student-username">{student.username}</p>
-              </div>
             </div>
           ))}
         </div>

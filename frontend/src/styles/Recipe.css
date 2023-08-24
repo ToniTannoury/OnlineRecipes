@@ -1,7 +1,7 @@
 .recommendation-container{
   border: solid 2px  #72b9fb;
   font-family: 'Apple Chancery',  cursive;
-  height: 500px;
+  height: 560px;
   width: 400px;
   border-radius: 20px;
   margin: auto;
@@ -59,10 +59,11 @@ gap: 16px;
 .review{
   margin-left: 17px;
   overflow-y: scroll;
-  height: 120px;
+  height: 140px;
   text-align: start;
   display: flex;
   align-items: center;
+  display: block;
 }
 .review::-webkit-scrollbar {
   width: 5px; 

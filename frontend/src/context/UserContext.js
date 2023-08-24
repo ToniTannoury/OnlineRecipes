@@ -91,6 +91,42 @@ const userReducer = (state, action) => {
               (list) => list.id !== action.payload
             ),
           };
+          case 'ADD_COMMENT_TO_LIKED_POST': {
+            const { postId, comment } = action.payload;
+            const likedPostIndex = state.likes.findIndex(post => post.post_id === postId);
+            
+            if (likedPostIndex !== -1) {
+              const updatedLikedPosts = [...state.likes];
+              const likedPost = updatedLikedPosts[likedPostIndex];
+              
+              likedPost.post.comments = [...likedPost.post.comments, comment];
+              
+              return {
+                ...state,
+                likes: updatedLikedPosts,
+              };
+            }
+            
+            return state;
+          }
+          case 'ADD_COMMENT_TO_OWN_POST': {
+            const { postId, comment } = action.payload;
+            const PostIndex = state.posts.findIndex(post => post.id === postId);
+            
+            if (PostIndex !== -1) {
+              const updatedPosts = [...state.posts];
+              const Post = updatedPosts[PostIndex];
+              
+              Post.comments = [...Post.comments, comment];
+              
+              return {
+                ...state,
+                likes: updatedPosts,
+              };
+            }
+            
+            return state;
+          }
     default:
       return state;
   }

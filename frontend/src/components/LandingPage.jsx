@@ -163,7 +163,7 @@ const LandingPage = () => {
         
       
       </Modal>
-
+          
       <Carousel recipes={state.posts} />
     </div>
   );

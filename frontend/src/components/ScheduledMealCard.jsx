@@ -3,6 +3,7 @@ import UserContext from '../context/UserContext';
 import Modal from 'react-modal';
 
 const ScheduledMealCard = ({ meal }) => {
+  console.log(meal)
   const { dispatch } = useContext(UserContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -42,16 +43,18 @@ const ScheduledMealCard = ({ meal }) => {
   };
 
   return (
+   
     <div
-      _id={meal.id}
-      post_id={meal.post.id}
+      _id={meal?.id}
+      post_id={meal.post_id}
       style={{ textAlign: 'center', marginBottom: '15px' }}
       className="meal-card"
     >
+       {console.log(meal)}
       <img
         style={{ width: '300px', height: '200px' }}
-        src={`http://127.0.0.1:8000/images/${meal.post.image_url}`}
-        alt={meal.post.name}
+        src={`http://127.0.0.1:8000/images/${meal?.post?.image_url}`}
+        alt={meal.post?.name}
       />
       <p>Meal Name: {meal.post?.name}</p>
       <p>Serving Date: {new Date(meal.serving_day).toLocaleDateString()}</p>

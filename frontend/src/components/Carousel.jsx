@@ -3,6 +3,7 @@ import UserContext from "../context/UserContext";
 import "../styles/Carousel.css";
 import Recipe from "./Recipe";
 import Modal  from "react-modal";
+import Input from "./Input";
 
 const Carousel = ({ recipes }) => {
   const [startX, setStartX] = useState(null);
@@ -20,6 +21,7 @@ const Carousel = ({ recipes }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewRecipeModalOpen, setIsViewRecipeModalOpen] = useState(false); 
   const {state , dispatch} = useContext(UserContext)
+  const [isTextareaFocused, setIsTextareaFocused] = useState(false);
   const handleImageChange = (event) => {
     setImage1(event.target.files[0]);
   };
@@ -42,13 +44,12 @@ console.log(formData)
     setIsEditModalOpen(false);
   };
   const handleDragStart = (e) => {
-    e.preventDefault();
-    setStartX(e.clientX);
-    setIsDragging(true);
-    document.addEventListener("mousemove", handleDragMove);
-    document.addEventListener("mouseup", handleDragEnd);
+    
+      e.preventDefault();
+      setStartX(e.clientX);
+      setIsDragging(true);
+    
   };
-
   const handleDragMove = (e) => {
     if (!isDragging) return;
     const offsetX = e.clientX - startX;
@@ -60,17 +61,21 @@ console.log(formData)
     if (isDragging) {
       setIsDragging(false);
       setScrollLeft(carouselRef.current.scrollLeft);
-      document.removeEventListener("mousemove", handleDragMove);
-      document.removeEventListener("mouseup", handleDragEnd);
     }
   };
 
   useEffect(() => {
+    const ref = carouselRef.current;
+    ref.addEventListener("contextmenu", handleDragStart);
+    ref.addEventListener("mousemove", handleDragMove);
+    ref.addEventListener("mouseup", handleDragEnd);
+
     return () => {
-      document.removeEventListener("mousemove", handleDragMove);
-      document.removeEventListener("mouseup", handleDragEnd);
+      ref.removeEventListener("contextmenu", handleDragStart);
+      ref.removeEventListener("mousemove", handleDragMove);
+      ref.removeEventListener("mouseup", handleDragEnd);
     };
-  }, []);
+  }, [carouselRef, handleDragStart, handleDragMove, handleDragEnd]);
   const handleEditClick = (e , recipe) => {
     
     setName1(recipe.name);
@@ -206,7 +211,7 @@ console.log(formData)
       <div
         className="carousel"
         ref={carouselRef}
-        onMouseDown={handleDragStart}
+        onContextMenu={handleDragStart}
         onMouseMove={handleDragMove}
         onMouseUp={handleDragEnd}
         style={{ display: "flex", overflowX: "scroll" }}
@@ -223,8 +228,11 @@ console.log(formData)
                 <div className="student-wrapper">
 
                   <Recipe handleViewRecipe={handleViewRecipe} handleEditClick={handleEditClick} recipe={recipe}/>
+                 
                 </div>
+                
             </div>
+            
           ))}
         </div>
       </div>

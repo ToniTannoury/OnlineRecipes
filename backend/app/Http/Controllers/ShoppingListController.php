@@ -19,4 +19,20 @@ class ShoppingListController extends Controller
 
         return response()->json(['message' => 'Shopping list created successfully', 'shopping_list' => $shoppingList]);
     }
+    public function deleteShoppingList(Request $request, $listId)
+    {
+        $user = $request->user();
+
+        $shoppingList = ShoppingList::where('user_id', $user->id)
+            ->where('id', $listId)
+            ->first();
+
+        if (!$shoppingList) {
+            return response()->json(['message' => 'Shopping list not found'], 404);
+        }
+
+        $shoppingList->delete();
+
+        return response()->json(['message' => 'Shopping list deleted successfully']);
+    }
 }

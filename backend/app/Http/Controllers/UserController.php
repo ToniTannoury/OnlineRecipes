@@ -49,9 +49,65 @@ class UserController extends Controller
             'post_id' => $post_id,
         ]);
 
-        $user->meals()->save($meal);
 
+        $user->meals()->save($meal);
+ $post = Post::find($post_id); // Assuming you have a Post model
+    if (!$post) {
+        return response()->json(['message' => 'Post not found'], 404);
+    }
+    $meal->post = $post;
         return response()->json(['message' => 'Meal planned successfully', 'data' => $meal], 201);
     }
+  
 
-}
+    public function getUserDetails(Request $request)
+    {
+        $user = $request->user();
+        $userDetails = [
+            'user' => $user,
+            'posts' => $user->posts->load(['images', 'likes', 'user', 'comments.user']),
+            'meals' => $user->meals->map(function ($meal) {
+                $post = $meal?->post?->load(['images', 'likes', 'user', 'comments.user']);
+                if ($post !== null) {
+                    $post->num_likes = $post?->likes->count();
+                }
+                return [
+                    'meal' => $meal,
+                    'post' => $post,
+                ];
+            }),
+            'liked_posts' => $user->likes->map(function ($like) {
+                $post = $like?->post?->load(['images', 'likes', 'user', 'comments.user']);
+                if ($post !== null) {
+                    $post->num_likes = $post?->likes->count();
+                    $post->comments = $post?->comments;
+                }
+                return $post;
+            }),
+            'shopping_lists' => $user->shoppingLists,
+        ];
+        return response()->json(['data' => $userDetails]);
+    }
+    
+
+    public function removeMeal(Request $request, $mealId)
+    {
+        $meal = Meal::find($mealId);
+    
+        if (!$meal) {
+            return response()->json(['message' => 'Meal not found'], 404);
+        }
+    
+        if ($request->user()->id !== $meal->user_id) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    
+        $meal->delete();
+    
+        return response()->json(['message' => 'Meal removed successfully'], 200);
+    }
+    
+    }
+    
+    
+

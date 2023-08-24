@@ -5,6 +5,7 @@ import SearchCard from './SearchCard';
 import ContextInitializer from './ContextInitializer';
 import ExpandableTree from './ExpandableTree';
 import ShoppingList from './ShoppingList';
+import "../styles/SearchRecipes.css"
 const SearchRecipes = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('name');
@@ -57,13 +58,17 @@ const SearchRecipes = () => {
       <ContextInitializer />
       <Navbar/>
       <input
+      className='search-recipe-input'
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder='Search recipes...'
+
       />
-      <div>
+      <div className='radio-container'>
         <label>
           <input
+           className='search-recipe-radio'
             type="radio"
             name="searchType"
             value="name"
@@ -94,9 +99,13 @@ const SearchRecipes = () => {
         </label>
       </div>
       <div>
-        {searched?.map((recipe) => (
-          <SearchCard key={recipe.id} recipe={recipe} />
-        ))}
+      {searchTerm && (
+        <div>
+          {searched?.map((recipe) => (
+            <SearchCard key={recipe.id} recipe={recipe} />
+          ))}
+        </div>
+      )}
       </div>
       
     </div>

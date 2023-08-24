@@ -101,7 +101,7 @@ const Navbar = () => {
                     <div className='expandable-content'>
                       {list.list}
                       <button
-                        className='content-button'
+                        className="add-to-shelve-button" 
                         onClick={() => handleDeleteList(list.id)}
                       >
                         {console.log(list)}
@@ -118,8 +118,8 @@ const Navbar = () => {
                onChange={(e) => setNewList(e.target.value)}
                placeholder='New List'
              />
-            <button onClick={handleAddList}>Add List</button>
-             <button onClick={closeShoppingListModal}>Close</button>
+            <button className="add-to-shelve-button"  onClick={handleAddList}>Add List</button>
+             <button className="add-to-shelve-button"  onClick={closeShoppingListModal}>Close</button>
           </Modal>
         </div>
         <button className='logout-button'>logout</button>

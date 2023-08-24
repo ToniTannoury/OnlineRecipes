@@ -1,0 +1,32 @@
+.search-recipe-input{
+  margin-left: 30%;
+  margin-top: 2%;
+  width: 630px;
+  padding: 20px;
+  font-family: 'Apple Chancery',  cursive;
+  border-radius: 10px;
+
+}
+.radio-container{
+  display: flex;
+  margin-left: 30%;
+  gap: 25px;
+  font-family: 'Apple Chancery',  cursive;
+
+
+}
+.search-card{
+  margin-left: 30%;
+
+display: flex;
+gap: 50px;
+align-items: center;
+font-family: 'Apple Chancery',  cursive;
+justify-content: center;
+width: 650px;
+border-radius: 15px;
+
+}
+.rec-name{
+  text-align: center;
+}

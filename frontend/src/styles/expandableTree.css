@@ -1,7 +1,7 @@
 /* ExpandableTree.css */
 .expandable-tree {
   margin-top: 10px;
-  background-color: #3498db;
+  background-color: whitesmoke;
   border-radius: 12px;
 }
 
@@ -10,7 +10,7 @@
   font-size: 18px;
   color: #333;
   margin-bottom: 10px;
-  background-color: #DB7734;
+  background-color: #3498db;
   color: ghostwhite
 }
 
@@ -18,6 +18,10 @@
   padding-left: 8px;
   min-height: 50px;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
  
  
 }

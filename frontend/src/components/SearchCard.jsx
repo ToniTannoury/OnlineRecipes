@@ -44,17 +44,21 @@ console.log(isLiked)
   };
 
   return (
-    <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+    <div className='search-card' style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+      <div>
+        <img
+          src={`http://127.0.0.1:8000/images/${recipe.image_url}`}
+          alt={recipe.name}
+          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+        />
+        <h3 className='rec-name'>{recipe.name}</h3>
+      </div>
       
-      <img
-        src={`http://127.0.0.1:8000/images/${recipe.image_url}`}
-        alt={recipe.name}
-        style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-      />
-      <h3>{recipe.name}</h3>
-      <p>Cuisine: {recipe.cuisine}</p>
-      <p>Ingredients: {recipe.ingredients}</p>
-      <button onClick={handleLike}>{isLiked ? 'Liked' : 'Like'}</button>  
+      <div className='search-card-content'>
+        <p>Cuisine: {recipe.cuisine}</p>
+        <p>Ingredients: {recipe.ingredients}</p>
+      </div>
+      <button className="add-to-shelve-button" onClick={handleLike}>{isLiked ? 'Liked' : 'Like'}</button>  
     </div>
   );
 };

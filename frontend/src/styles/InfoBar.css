@@ -9,6 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+  font-family: 'Apple Chancery', cursive;
 
 }
 .user-image{
@@ -36,4 +37,8 @@
 }
 .username{
   width: 130px;
+  margin-left: 24px;
+  color: #3498db;
+  font-size: 15px;
+  font-weight: 600;
 }

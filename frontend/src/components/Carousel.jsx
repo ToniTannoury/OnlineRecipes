@@ -4,6 +4,7 @@ import "../styles/Carousel.css";
 import Recipe from "./Recipe";
 import Modal  from "react-modal";
 import Input from "./Input";
+import "../styles/ScheduledMealCard.css";
 
 const Carousel = ({ recipes }) => {
   const [startX, setStartX] = useState(null);
@@ -18,10 +19,12 @@ const Carousel = ({ recipes }) => {
   const [recipeIngredients, setRecipeIngredients] = useState('recipe.ingredients');
   const [recipeName, setRecipeName] = useState('recipe.name');
   const [selectedId, setSelectedId] = useState(0);
+  const [recipeImages, setRecipeImages] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewRecipeModalOpen, setIsViewRecipeModalOpen] = useState(false); 
   const {state , dispatch} = useContext(UserContext)
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const handleImageChange = (event) => {
     setImage1(event.target.files[0]);
   };
@@ -88,6 +91,7 @@ console.log(formData)
     setRecipeCuisine(recipe.cuisine)
     setRecipeIngredients(recipe.ingredients)
     setRecipeName(recipe.name)
+    setRecipeImages(recipe.images)
     setIsViewRecipeModalOpen(true);
     setSelectedId(+e.target.parentElement.parentElement.getAttribute('_id') )
   };
@@ -176,7 +180,8 @@ console.log(formData)
       </form>
     </Modal>
            <Modal  isOpen={isViewRecipeModalOpen} onRequestClose={() => setIsViewRecipeModalOpen(false)} className="recipe_modal">
-      <h2 className="modal-title">Recipe</h2>
+           <div className="scheduled-meal-card">
+           <h2 className="modal-title">Recipe</h2>
       <form className="modal-form" onSubmit={handleSubmit}>
         <div>
         <span className="modal-label">Name: </span>
@@ -193,7 +198,7 @@ console.log(formData)
         <textarea
           className="modal-input"
           type="text"
-          value={ingredients1}
+          value={recipeIngredients}
           disabled
           style={{border:"none"}}
         />
@@ -201,11 +206,39 @@ console.log(formData)
         <div>
         <span className="modal-label">Images:</span>
         <div>
-          images...
+        {recipeImages && recipeImages.length > 0 && (
+          <div className="image-navigation">
+            <img
+              className="scheduled-meal-card-image"
+              src={`http://127.0.0.1:8000/images/${recipeImages[currentImageIndex].image_url}`}
+              alt={`Image ${currentImageIndex + 1}`}
+            />
+            <div className="image-arrows">
+              <button
+              className="scheduled-meal-card-arrow"
+                onClick={() =>
+                  setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? recipeImages.length - 1 : prevIndex - 1))
+                }
+              >
+                &lt;
+              </button>
+              <button
+              className="scheduled-meal-card-arrow"
+                onClick={() =>
+                  setCurrentImageIndex((prevIndex) => (prevIndex === recipeImages.length - 1 ? 0 : prevIndex + 1))
+                }
+              >
+                &gt;
+              </button>
+            </div>
+          </div>
+        )}
         </div>
         </div>
         
       </form>
+            </div>
+      
     </Modal>
 
       <div
@@ -216,7 +249,7 @@ console.log(formData)
         onMouseUp={handleDragEnd}
         style={{ display: "flex", overflowX: "scroll" }}
       >
-        <div style={{ display: "flex", gap: "40px", textAlign: "center" }}>
+        <div style={{ display: "flex", gap: "40px", marginLeft:"2%"}}>
           {recipes?.map((recipe) => (
             <div
               key={recipe.id}

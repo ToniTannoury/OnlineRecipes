@@ -27,9 +27,10 @@
   width: 75px;
   height: 30px;
   margin-top: 18px;
-  border-radius: 15px;
+  border-radius: 5px;
   cursor: pointer;
   font-weight: 600;
+  color: whitesmoke;
 }
 .logout-button:hover{
   background-color:  #072c46;
@@ -38,4 +39,9 @@
 
 .content-button{
   margin-left: 10px;
+}
+.link{
+  text-decoration: none ;
+   color:#3498db;
+   cursor: pointer;
 }

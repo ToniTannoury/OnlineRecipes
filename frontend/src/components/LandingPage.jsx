@@ -11,8 +11,8 @@ import EditRecipeModal from './EditRecipeModal '
 import Modal from 'react-modal'
 import Calendar from 'react-calendar'; 
 import 'react-calendar/dist/Calendar.css';
+import "../styles/LandingPageButtons.css"
 import ScheduledMealCard from './ScheduledMealCard';
-
 const LandingPage = () => {
   const {state , dispatch} = useContext(UserContext)
   
@@ -106,9 +106,12 @@ const LandingPage = () => {
       <ContextInitializer />
       <Navbar />
       <UserInfoBar user={state} />
-      <button onClick={openCreateModal}>Create Recipe</button>
-      <button onClick={openScheduleModal}>Schedule Meal</button>
-      <button onClick={openScheduledMealsModal}>Scheduled Meals</button>
+      <div className='button-container'>
+        <button className='single-button' onClick={openCreateModal}>Create Recipe</button>
+        <button className='single-button' onClick={openScheduleModal}>Schedule Meal</button>
+        <button className='single-button' onClick={openScheduledMealsModal}>Scheduled Meals</button>
+      </div>
+      
 
       <CreateRecipeModal
         isOpen={isCreateModalOpen}
@@ -121,7 +124,7 @@ const LandingPage = () => {
         onRequestClose={closeScheduleModal}
         className="modal"
       >
-        <h2>Schedule a Meal</h2>
+        <h2 className='header'>Schedule a Meal</h2>
         <div style={{marginLeft:"25px"}}>
         <Calendar
           onChange={handleDateChange}
@@ -131,20 +134,26 @@ const LandingPage = () => {
         />
         </div>
        <div>
-       <select
+       <select className='option-item'
             value={selectedRecipe}
             onChange={(e) => setSelectedRecipe(e.target.value)}
             style={{width:"88%" , marginTop:"10px" , marginBottom:"10px"}}
           >
-            <option value="">Select a recipe</option>
-            {combinedRecipes?.map((recipe) => (
-              <option _id={recipe.id} key={recipe.id} value={recipe.id}>
-                {recipe.name}
+            <option className='option-item' value="">Select a recipe</option>
+            {console.log(combinedRecipes)}
+            {state.likes?.map((recipe) => (
+              <option className='option-item' _id={recipe?.post_id} key={recipe?.post_id} value={recipe?.post_id}>
+                {recipe?.post?.name}
+              </option>
+            ))}
+            {state.posts?.map((recipe) => (
+              <option className='option-item' _id={recipe.id} key={recipe.id} value={recipe.id}>
+                {recipe.name !== '' && recipe.name}
               </option>
             ))}
           </select>
        </div>
-       <button onClick={handleScheduleMeal}>Schedule Meal</button>
+       <button className="add-to-shelve-button s" onClick={handleScheduleMeal}>Schedule Meal</button>
       </Modal>
       <Modal
         isOpen={isScheduledMealsModalOpen}

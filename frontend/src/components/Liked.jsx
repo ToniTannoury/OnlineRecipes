@@ -6,6 +6,7 @@ import Carousel from './Carousel'
 import Recipe from './Recipe'
 import Modal from 'react-modal'
 
+
 const Liked = () => {
   const [recipeCuisine, setRecipeCuisine] = useState('recipe.cuisine');
   const [recipeIngredients, setRecipeIngredients] = useState('recipe.ingredients');
@@ -13,6 +14,8 @@ const Liked = () => {
   const [selectedId, setSelectedId] = useState(0);
   const {state , dispatch} = useContext(UserContext)
   const [isViewRecipeModalOpen, setIsViewRecipeModalOpen] = useState(false); 
+  const [recipeImages, setRecipeImages] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   console.log(state)
   const handleViewRecipe = (e , recipe) => {
@@ -21,6 +24,7 @@ const Liked = () => {
     setRecipeIngredients(recipe.ingredients)
     setRecipeName(recipe.name)
     setIsViewRecipeModalOpen(true);
+    setRecipeImages(recipe.images)
     setSelectedId(+e.target.parentElement.parentElement.getAttribute('_id') )
     
   };
@@ -32,9 +36,9 @@ const Liked = () => {
       
       <h1>Liked Recipes</h1>
       {state.likes?.map(like=><Recipe handleViewRecipe={handleViewRecipe} like recipe={like.post}/>)}
-      <Modal  isOpen={isViewRecipeModalOpen} onRequestClose={() => setIsViewRecipeModalOpen(false)} className="recipe_modal">
+       <Modal  isOpen={isViewRecipeModalOpen} onRequestClose={() => setIsViewRecipeModalOpen(false)} className="recipe_modal">
       <h2 className="modal-title">Recipe</h2>
-      <form className="modal-form" >
+
         <div>
         <span className="modal-label">Name: </span>
         <span>{recipeName}</span>
@@ -58,11 +62,35 @@ const Liked = () => {
         <div>
         <span className="modal-label">Images:</span>
         <div>
-          images...
+        {recipeImages && recipeImages.length > 0 && (
+          <div className="image-navigation">
+            <img
+              className="displayed-image"
+              src={`http://127.0.0.1:8000/images/${recipeImages[currentImageIndex].image_url}`}
+              alt={`Image ${currentImageIndex + 1}`}
+            />
+            <div className="image-arrows">
+              <button
+                onClick={() =>
+                  setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? recipeImages.length - 1 : prevIndex - 1))
+                }
+              >
+                &lt;
+              </button>
+              <button
+                onClick={() =>
+                  setCurrentImageIndex((prevIndex) => (prevIndex === recipeImages.length - 1 ? 0 : prevIndex + 1))
+                }
+              >
+                &gt;
+              </button>
+            </div>
+          </div>
+        )}
         </div>
         </div>
         
-      </form>
+      
     </Modal>
     </div>
   )

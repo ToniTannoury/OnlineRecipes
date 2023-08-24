@@ -3,12 +3,44 @@ import UserContext from '../context/UserContext'
 import Modal from 'react-modal'
 import "../styles/Recipe.css"
 import Input from './Input'
+import "../styles/ScheduledMealCard.css";
 
 import EditRecipeModal from './EditRecipeModal '
 const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
   console.log(recipe)
   const {state , dispatch} = useContext(UserContext)
   const [commentContent, setCommentContent] = useState('')
+  const [isAddImageModalOpen, setAddImageModalOpen] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  const handleAddImage = () => {
+    setAddImageModalOpen(true);
+  };
+
+  const handleImageInputChange = (event) => {
+    setSelectedImages([...event.target.files]);
+  };
+
+  const handleImageUpload = async () => {
+    const formData = new FormData();
+    selectedImages.forEach(image => {
+      formData.append('images[]', image);
+    });
+    formData.append('post_id' , recipe.id)
+    const response = await fetch('http://127.0.0.1:8000/api/user/images', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: formData,
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    setAddImageModalOpen(false);
+    setSelectedImages([]);
+  };
 
   const formattedComments = recipe?.comments?.map(comment => (
   <div className='comment-container'> 
@@ -78,9 +110,21 @@ const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
       payload: recipe.id,
     });
   }
- 
+
   return ( 
     <>
+     <Modal
+        isOpen={isAddImageModalOpen}
+        onRequestClose={() => setAddImageModalOpen(false)}
+        contentLabel="Add Image Modal"
+        className='modal'
+      >
+          
+        <h2>Add Images</h2>
+        <input type="file" multiple onChange={handleImageInputChange} />
+        <button  className='add-to-shelve-button' onClick={handleImageUpload}>Upload</button>
+        <button  className='add-to-shelve-button'onClick={() => setAddImageModalOpen(false)}>Cancel</button>
+      </Modal>
      <div _id={recipe?.id} className='recommendation-container'>
      
      <div className='recommendation-header'>
@@ -120,8 +164,9 @@ const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
          onChange={(e) => setCommentContent(e.target.value)}
          name="comment"
          placeholder="Add a comment..."
+         className='comment-input'
        />
-       <button onClick={handleComment}>Comment</button>
+       <button className='comment-button' onClick={handleComment}>Comment</button>
      </div>}
  
      <div>
@@ -130,6 +175,7 @@ const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
    Edit
  </button>}
        {!like && <button onClick={handleRemove}className='add-to-shelve-button'>Remove</button>}
+       {!like && <button onClick={handleAddImage}className='add-to-shelve-button'>Add Image</button>}
        {like && <button onClick={unlike} className='add-to-shelve-button'>Remove from likes</button>}
      </div>
    </div>

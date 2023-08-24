@@ -69,20 +69,20 @@ const Navbar = () => {
       </div>
       <div className='right-nav'>
              <h4>
-               <Link to={'/LandingPage'}>Your Recipes</Link>
+               <Link className='link' to={'/LandingPage'}>Your Recipes</Link>
              </h4>
              <div>
                <h4>
-                 <Link to={'/searchRecipes'}>Search for Recipes</Link>
+                 <Link className='link' to={'/searchRecipes'}>Search for Recipes</Link>
                </h4>
              </div>
              <div>
                <h4>
-                 <Link to={'/likes'}>Your likes</Link>
+                 <Link className='link' to={'/likes'}>Your likes</Link>
                </h4>
              </div>
              <div>
-               <h4 onClick={openShoppingListModal}>Shopping List</h4>
+               <h4  className='link' onClick={openShoppingListModal}>Shopping List</h4>
           <Modal
             isOpen={isShoppingListModalOpen}
             onRequestClose={closeShoppingListModal}

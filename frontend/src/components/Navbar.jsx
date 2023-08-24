@@ -99,7 +99,10 @@ const Navbar = () => {
                 >
                   {expandedTrees[list.id] && (
                     <div className='expandable-content'>
+                      <div style={{width:"250px"}}>
                       {list.list}
+                      </div>
+                      
                       <button
                         className="add-to-shelve-button" 
                         onClick={() => handleDeleteList(list.id)}
@@ -117,6 +120,7 @@ const Navbar = () => {
                value={newList}
                onChange={(e) => setNewList(e.target.value)}
                placeholder='New List'
+               className='new-list'
              />
             <button className="add-to-shelve-button"  onClick={handleAddList}>Add List</button>
              <button className="add-to-shelve-button"  onClick={closeShoppingListModal}>Close</button>

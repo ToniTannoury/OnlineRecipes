@@ -118,7 +118,7 @@ public function unlikeRecipe(Request $request)
 {
     $user = $request->user();
     $post_id = $request->input('post_id');
-    
+    error_log($post_id);
     $recipe = Post::find($post_id); 
 
     if (!$recipe) {

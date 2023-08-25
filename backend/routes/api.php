@@ -36,6 +36,7 @@ Route::group(["middleware" => "auth:api"], function(){
         Route::post('/plan-meal',  [UserController::class , "planMeal"]);
         Route::delete('/delete-meal/{mealId}',  [UserController::class , "removeMeal"]);
         Route::get('/get-meals',  [MealController::class , "getUserMeals"]);
+        Route::delete('/delete-meals/{postId}',  [MealController::class , "deleteMealsByPostId"]);
         Route::get('/get-details',  [UserController::class , "getUserDetails"]);
         Route::post('/images', [ImageController::class, 'store']);
     });

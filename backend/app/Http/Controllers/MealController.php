@@ -15,4 +15,19 @@ class MealController extends Controller
 
         return response()->json(['data' => $meals]);
     }
+    public function deleteMealsByPostId(Request $request, $postId)
+    {
+        $user = $request->user();
+
+        $mealsToDelete = $user->meals()->where('post_id', $postId)->get();
+
+        $deletedMealIds = [];
+
+        foreach ($mealsToDelete as $meal) {
+            $meal->delete();
+            $deletedMealIds[] = $meal->id;
+        }
+
+        return response()->json(['deleted_meal_ids' => $deletedMealIds]);
+    }
 }

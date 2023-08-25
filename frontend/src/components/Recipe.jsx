@@ -60,17 +60,51 @@ const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
 
   const handleRemove = async(e)=>{
     console.log(e.target.parentElement.parentElement)
+    const response_del_meal = await fetch(
+      `http://127.0.0.1:8000/api/user/delete-meals/${+e.target.parentElement.parentElement.getAttribute("_id")}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+    );
+    const data = await response_del_meal.json()
+
+    if (response_del_meal.ok) {
+      dispatch({
+        type: "REMOVE_MEAL",
+        payload: data.deleted_meal_ids[0]
+        ,
+      });
+
+      console.log("Meal removed successfully");
+    }
+    const response_unlike = await fetch('http://127.0.0.1:8000/api/user/unlike_recipe', {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        post_id: recipe?.id,
+      }),
+    });
+    dispatch({
+      type: 'REMOVE_LIKE',
+      payload: recipe?.id,
+    });
     const response = await fetch(`http://127.0.0.1:8000/api/user/delete_post/${+e.target.parentElement.parentElement.getAttribute("_id")}` , {
       method:"DELETE",
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`,
       }
     })
-    const data = await response.json()
     dispatch({
       type:"DELETE_POST",
       payload:+e.target.parentElement.parentElement.getAttribute("_id")
     })
+    
     console.log(data)
   }
   const handleComment = async () => {
@@ -111,12 +145,12 @@ const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        post_id: recipe.id,
+        post_id: recipe?.id,
       }),
     });
     dispatch({
       type: 'REMOVE_LIKE',
-      payload: recipe.id,
+      payload: recipe?.id,
     });
   }
 

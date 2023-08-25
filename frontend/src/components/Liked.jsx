@@ -35,7 +35,7 @@ const Liked = () => {
       <ContextInitializer/>
       <Navbar/>
       
-      <h1>Liked Recipes</h1>
+      <h2 className='your-likes'> Liked Recipes</h2>
       <div className='likes-container'>
       {state.likes?.map(like=><Recipe handleViewRecipe={handleViewRecipe} like recipe={like.post}/>)}
       </div>

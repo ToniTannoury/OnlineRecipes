@@ -53,7 +53,7 @@ const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
 
   const formattedComments = recipe?.comments?.map(comment => (
   <div className='comment-container'> 
-    <img className='author-image'  src={`http://127.0.0.1:8000/images/${recipe.user?.pic_url}`} alt="" /><div>{ comment?.user?.name}: { comment?.content} </div>
+    <img className='author-image'  src={`http://127.0.0.1:8000/images/${comment.user?.pic_url}`} alt="" /><div>{ comment?.user?.name}: { comment?.content} </div>
   </div>
    
   ));
@@ -137,7 +137,25 @@ const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
       }});
     setCommentContent('');
   };
-  const unlike = async()=>{
+  const unlike = async(e)=>{
+    const response_del_meal = await fetch(
+      `http://127.0.0.1:8000/api/user/delete-meals/${+e.target.parentElement.parentElement.getAttribute("_id")}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+    );
+    const data = await response_del_meal.json()
+
+    if (response_del_meal.ok) {
+      dispatch({
+        type: "REMOVE_MEAL",
+        payload: data.deleted_meal_ids[0]
+        ,
+      });
+    }
     const response = await fetch('http://127.0.0.1:8000/api/user/unlike_recipe', {
       method: 'DELETE',
       headers: {

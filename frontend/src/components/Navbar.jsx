@@ -10,7 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isShoppingListModalOpen, setIsShoppingListModalOpen] = useState(false);
   const [newList, setNewList] = useState('');
-  const [expandedTrees, setExpandedTrees] = useState({}); // Track expanded status for each tree
+  const [expandedTrees, setExpandedTrees] = useState({}); 
   console.log(state)
   const openShoppingListModal = () => {
     setIsShoppingListModalOpen(true);
@@ -61,7 +61,10 @@ const Navbar = () => {
       [treeId]: !prevState[treeId],
     }));
   };
-
+  const hanldeLogout = ()=>{
+    localStorage.clear()
+    navigate('/login')
+  }
   return (
     <div className='nav-bar'>
       <div className='left-nav'>
@@ -126,7 +129,7 @@ const Navbar = () => {
              <button className="add-to-shelve-button"  onClick={closeShoppingListModal}>Close</button>
           </Modal>
         </div>
-        <button className='logout-button'>logout</button>
+        <button onClick={hanldeLogout} className='logout-button'>logout</button>
       </div>
     </div>
   );

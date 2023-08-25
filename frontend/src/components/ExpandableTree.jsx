@@ -9,7 +9,7 @@ const ExpandableTree = ({id ,  title, expanded, onClick, children}) => {
         className="expandable-header hw"
         onClick={onClick}
       >
-        <div>{expanded ? "▼" : "►"} Created Date:{datePart} , Time:{hour+":"+minutes}</div>   
+        <div>{expanded ? "▼" : "►"} Created Date:{datePart} , Time:{`${+hour+3}`+":"+minutes}</div>   
       </div>
       {expanded && <div className="expandable-content">{children}</div>}
     </div>

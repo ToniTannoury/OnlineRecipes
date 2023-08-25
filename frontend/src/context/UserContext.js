@@ -127,6 +127,24 @@ const userReducer = (state, action) => {
             
             return state;
           }
+          case 'UPLOAD_IMAGES_SUCCESS': {
+            const { postId, imageNames } = action.payload;
+            console.log(postId , imageNames)
+            const updatedPosts = state.posts.map(post => {
+              if (post.id === postId) {
+                return {
+                  ...post,
+                  images: [...post.images, ...imageNames],
+                };
+              }
+              return post;
+            });
+          
+            return {
+              ...state,
+              posts: updatedPosts,
+            };
+          }
     default:
       return state;
   }

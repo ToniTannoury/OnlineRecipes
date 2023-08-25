@@ -9,6 +9,7 @@ import EditRecipeModal from './EditRecipeModal '
 const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
   console.log(recipe)
   const {state , dispatch} = useContext(UserContext)
+  console.log(state)
   const [commentContent, setCommentContent] = useState('')
   const [isAddImageModalOpen, setAddImageModalOpen] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
@@ -37,7 +38,15 @@ const Recipe = ({recipe , handleEditClick ,handleViewRecipe , like}) => {
 
     const data = await response.json();
     console.log(data);
+    const uploadedImageNames = data.images; 
 
+    dispatch({
+      type: 'UPLOAD_IMAGES_SUCCESS',
+      payload: {
+        postId: recipe.id,
+        imageNames: uploadedImageNames,
+      },
+    });
     setAddImageModalOpen(false);
     setSelectedImages([]);
   };
